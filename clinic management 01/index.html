@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        label, input, select, button {
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clinic Management System</h1>
+    <form id="appointmentForm">
+        <label for="patientName">Patient Name:</label>
+        <input type="text" id="patientName" name="patientName" required>
+
+        <label for="doctor">Select Doctor:</label>
+        <select id="doctor" name="doctor">
+            <option value="Dr. Smith">Dr. Smith</option>
+            <option value="Dr. Adams">Dr. Adams</option>
+        </select>
+
+        <label for="date">Appointment Date:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="time">Appointment Time:</label>
+        <input type="time" id="time" name="time" required>
+
+        <button type="submit">Book Appointment</button>
+    </form>
+    <p id="responseMessage"></p>
+
+    <script>
+        const form = document.getElementById('appointmentForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const responseMessage = document.getElementById('responseMessage');
+
+            const appointmentData = {
+                patientName: form.patientName.value,
+                doctor: form.doctor.value,
+                date: form.date.value,
+                time: form.time.value,
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/appointments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(appointmentData),
+                });
+
+                const result = await response.json();
+                responseMessage.textContent = result.message;
+            } catch (error) {
+                responseMessage.textContent = 'Error: Unable to book appointment';
+            }
+        });
+    </script>
+</body>
+</html>
